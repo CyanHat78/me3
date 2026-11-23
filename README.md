@@ -68,6 +68,25 @@ me3 is a tool that extends the functionality of FROMSOFTWARE games.
 >
 > If the env var is unset, empty, or points to a non-existent directory, me3 falls back to the
 > original Steam library lookup logic.
+>
+> ### Elden Ring Reforged — editing the launch script
+>
+> When ERR bypasses Steam, its launcher scripts don't set `ME3_COMPAT_DATA_PATH` by default.
+> To make the ERR wrapper use your custom Wine prefix with me3, add the variable to the
+> environment section of your wrapper script (e.g. `7 - Goverlay Wrapper.sh` or whichever
+> wrapper ERR calls):
+>
+> ```bash
+> # Add this anywhere before the me3 / bgmod launch line:
+> export ME3_COMPAT_DATA_PATH="/path/to/your/custom/compatdata"
+> ```
+>
+> The path should point to the folder that **contains** the `pfx` subdirectory
+> (e.g. `/home/$USER/CentralCompatData/EldenRing/`, not the `pfx` folder itself).
+> me3 will use this path directly as the Wine prefix without appending `/pfx`.
+>
+> If you also set `STEAM_COMPAT_DATA_PATH` in the same script, `ME3_COMPAT_DATA_PATH` takes
+> precedence — me3 reads it first and uses it as-is.
 
 ### Supported platforms
 
