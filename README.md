@@ -53,6 +53,22 @@
 
 me3 is a tool that extends the functionality of FROMSOFTWARE games.
 
+> [!NOTE]
+> **Fork-specific feature: Custom Wine prefix (non-Steam launchers)**
+>
+> This fork adds support for launching games through third-party launchers that bypass Steam
+> (e.g. [Elden Ring Reforged](https://www.nexusmods.com/eldenring/mods/541)'s ReforgedLauncher).
+> Set the `ME3_COMPAT_DATA_PATH` environment variable to a directory containing your Wine prefix
+> (the folder that contains the `pfx` subdirectory), and me3 will use it directly instead of
+> trying to derive the path from Steam library locations.
+>
+> ```bash
+> ME3_COMPAT_DATA_PATH=/path/to/custom/compatdata me3 launch -g eldenring
+> ```
+>
+> If the env var is unset, empty, or points to a non-existent directory, me3 falls back to the
+> original Steam library lookup logic.
+
 ### Supported platforms
 
 - Windows
