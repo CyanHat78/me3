@@ -171,16 +171,26 @@ impl CompatToolLaunchStrategy {
             "STEAM_COMPAT_LIBRARY_PATHS",
             library.path().join("steamapps"),
         );
-        let prefix_path = steam
-            .library_paths()?
-            .into_iter()
-            .map(|path| path.join(format!("steamapps/compatdata/{}", app_id)))
-            .find(|path| path.exists())
+        let prefix_path = std::env::var("ME3_COMPAT_DATA_PATH")
+            .map(PathBuf::from)
+            .ok()
+            .filter(|p| p.is_dir())
             .unwrap_or_else(|| {
-                library
-                    .path()
-                    .join(format!("steamapps/compatdata/{}", app_id))
+                steam
+                    .library_paths()
+                    .ok()
+                    .into_iter()
+                    .flatten()
+                    .map(|path| path.join(format!("steamapps/compatdata/{}", app_id)))
+                    .find(|path| path.exists())
+                    .unwrap_or_else(|| {
+                        library
+                            .path()
+                            .join(format!("steamapps/compatdata/{}", app_id))
+                    })
             });
+
+        debug!(?prefix_path, "STEAM_COMPAT_DATA_PATH resolved");
 
         let active_mount_points = active_mounts()?;
         let mut used_mount_points = HashSet::new();
