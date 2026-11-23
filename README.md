@@ -71,22 +71,29 @@ me3 is a tool that extends the functionality of FROMSOFTWARE games.
 >
 > ### Elden Ring Reforged — editing the launch script
 >
-> When ERR bypasses Steam, its launcher scripts don't set `ME3_COMPAT_DATA_PATH` by default.
-> To make the ERR wrapper use your custom Wine prefix with me3, add the variable to the
-> environment section of your wrapper script (e.g. `7 - Goverlay Wrapper.sh` or whichever
-> wrapper ERR calls):
+> When ERR is launched outside of Steam, its vanilla scripts do not set any Wine prefix
+> variables. me3 (invoked internally by ERR's modengine) cannot auto-detect the prefix
+> and will fail to load mods. To fix this, edit your ERR launch script and add the
+> `ME3_COMPAT_DATA_PATH` export near the top:
 >
-> ```bash
-> # Add this anywhere before the me3 / bgmod launch line:
-> export ME3_COMPAT_DATA_PATH="/path/to/your/custom/compatdata"
-> ```
+> 1. Open your ERR launch script (e.g. `4 - Launch ELDEN RING Reforged - Offline or Seamless (Linux).sh`)
+>    in a text editor.
+> 2. Add this line **after** the `script_dir` assignment (around line 4) and **before** the
+>   `launch=` assignment (around line 25):
+>
+>    ```bash
+>    export ME3_COMPAT_DATA_PATH="/path/to/your/custom/compatdata"
+>    ```
+>
+> 3. Save the script and launch ERR as usual.
 >
 > The path should point to the folder that **contains** the `pfx` subdirectory
 > (e.g. `/home/$USER/CentralCompatData/EldenRing/`, not the `pfx` folder itself).
 > me3 will use this path directly as the Wine prefix without appending `/pfx`.
 >
-> If you also set `STEAM_COMPAT_DATA_PATH` in the same script, `ME3_COMPAT_DATA_PATH` takes
-> precedence — me3 reads it first and uses it as-is.
+> This works regardless of whether `STEAM_RUNTIME` is set — the env var is available
+> to the entire script and its child processes. If you also set `STEAM_COMPAT_DATA_PATH`
+> elsewhere, `ME3_COMPAT_DATA_PATH` takes precedence and me3 uses it as-is.
 
 ### Supported platforms
 
